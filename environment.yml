@@ -1,0 +1,14 @@
+name: datalit
+channels:
+  - defaults
+dependencies:
+  - matplotlib
+  - numpy
+  - python=3.10
+  - scipy
+  - ipykernel
+  - requests
+  - beautifulsoup4
+  - pandas
+  - seaborn
+prefix: /opt/homebrew/Caskroom/miniconda/base/envs/datalit
