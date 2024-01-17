@@ -121,7 +121,7 @@ class Loader:
         for metric, files in self.metric_files.items():
             dfs = []
             for file in files:
-                df = pd.read_csv(file, sep=";")
+                df = pd.read_csv(file, sep=";", na_values=-999)
                 df["MESS_DATUM"] = pd.to_datetime(df["MESS_DATUM"], format="%Y%m%d%H%M")
                 dfs.append(df)
             df = pd.concat(dfs)
