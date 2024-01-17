@@ -118,11 +118,14 @@ def pettitt_test( X: np.array) -> list:
       T.append(np.abs(x_k))
    return T
 
+'''
 arr=np.array([1,1,0.8,1.2,11,10,10,10.2,10.1,10,1,1,0.8,1,1,1,])
 
 from matplotlib import pyplot as plt
 plt.plot(pettitt_test(arr))
 plt.show()
+
+'''
 
    
 
