@@ -155,3 +155,66 @@ class Weibull:
             b=params[1]
             return Weibull(l,b)
     
+
+
+    def fit(self, X: np.array):
+        '''
+        Computes metrics of goodness of fit of the weibull class self to the data presented in the frame X
+        The metrics are (as ordered in the output: MSE of the PDF, MSE of the CDF, R^2 of the PDF, R^2 of th CDF)
+        '''
+        # find an appropriate number of bins to sort in, as suggested in the lecture
+        n_bins= int(0.1* np.sqrt(len(X)))+2
+        max_included_windspeed=int(X.max()+1)
+        number_of_bins=n_bins
+        edges=np.linspace(0,max_included_windspeed, number_of_bins)
+        empiric_pdf= np.histogram(X, bins=edges)[0]
+        empiric_pdf=empiric_pdf/(empiric_pdf.sum())
+
+        # first do mse
+        mse=0
+        for i in range(0, len(edges)-1):
+            mse=mse + (empiric_pdf[i] - (self.cdf(edges[i+1]) -self.cdf(edges[i])))**2
+        mse=1/len(empiric_pdf)*mse
+
+        # do mse for the cdf
+        
+        cdf_mse=0
+        F_i=0
+        for i in range(0, len(edges)-1):
+            F_i=F_i+empiric_pdf[i]
+            cdf_mse=cdf_mse + (F_i - self.cdf(edges[i+1]))**2
+        cdf_mse=1/len(empiric_pdf)*cdf_mse
+
+        # then do r^2
+        enum=0
+        for i in range(0, number_of_bins-1):
+            enum=enum+(empiric_pdf[i] - (self.cdf(edges[i+1]) -self.cdf(edges[i])))**2
+
+        denom=0
+        for i in range(0, number_of_bins-1):
+            denom=denom+(empiric_pdf[i] - 1/number_of_bins)**2   
+
+        r2=1-enum/denom
+
+        # then do r^2 for the cdf
+        cdf_enum=0
+        F_i=0
+        for i in range(0, number_of_bins-1):
+            F_i=F_i+empiric_pdf[i]
+            cdf_enum=cdf_enum+(F_i- self.cdf(edges[i+1]))**2
+
+        mean_F_i= 1/number_of_bins*F_i
+        F_i=0
+        cdf_denom=0
+        for i in range(0, number_of_bins-1):
+            F_i=F_i+empiric_pdf[i]
+            cdf_denom=cdf_denom+(F_i - mean_F_i)**2   
+
+        cdf_r2=1-cdf_enum/cdf_denom
+
+        return [mse.item(),cdf_mse.item(), r2.item(), cdf_r2.item()]
+
+
+    
+
+

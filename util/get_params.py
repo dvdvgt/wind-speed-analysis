@@ -48,5 +48,33 @@ def monthly_params(first: int, last: int, dataframe: pd.DataFrame) -> pd.DataFra
     return monthly_df
 
 
+def bf_classifier(data):
+    '''
+    classifies the input according to the Beaufort-scale
+    '''
+
+    if data >24.5:
+        return 10
+    elif data >20.8:
+        return 9
+    elif data >17.2:
+        return 8
+    elif data >13.9:
+        return 7
+    elif data >10.8:
+        return 6
+    elif data >8.0:
+        return 5
+    elif data >5.5:
+        return 4
+    elif data >3.4:
+        return 3
+    elif data >1.6:
+        return 2
+    elif data >0.3:
+        return 1
+    else:
+        return 0
+    
 
 
