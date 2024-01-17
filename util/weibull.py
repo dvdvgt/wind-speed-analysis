@@ -155,6 +155,3 @@ class Weibull:
             b=params[1]
             return Weibull(l,b)
     
-arr=np.array([2,2,3])
-
-print(Weibull.graphical_estimate(arr))
