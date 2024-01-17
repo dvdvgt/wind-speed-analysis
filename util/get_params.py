@@ -77,4 +77,53 @@ def bf_classifier(data):
         return 0
     
 
+def snh_test( X: np.array) -> list:
+   '''
+   Computes the test statistic of the standard normal homogeneity test for the given data X
+   '''
+   Y=np.array(X)
+   s=Y.std()
+   m=Y.mean()
+   T=[]
+   for k in range (0, len(Y)):
+       z_1= 0 
+       for i in range (0, k+1):
+           z_1=z_1+(Y[i]- m)/s
+       z_1=z_1/(k+1)
+       
+       z_2= 0 
+       for i in range (k+1, len(Y)):
+           z_2=z_2+(Y[i]- m)/s
+       z_2=z_2/(len(Y) - (k))
+
+
+       T.append(k*z_1**2 + (len(Y) -k)*z_2**2)
+   return T
+
+
+def pettitt_test( X: np.array) -> list:
+   '''
+   Computes the test statistic of the pettitt test for the given data X
+   '''
+   Y=np.array(X)
+   R=np.argsort(Y)
+   T=[]
+   x_k=0
+   for k in range(0, len(R)):
+      x_k=0
+      for i in range(0,k):
+         x_k=x_k + 2*(R[i]+1)
+      
+      x_k=x_k-(k+1)*(len(R)+1)
+      T.append(np.abs(x_k))
+   return T
+
+arr=np.array([1,1,0.8,1.2,11,10,10,10.2,10.1,10,1,1,0.8,1,1,1,])
+
+from matplotlib import pyplot as plt
+plt.plot(pettitt_test(arr))
+plt.show()
+
+   
+
 

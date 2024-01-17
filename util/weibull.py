@@ -8,10 +8,10 @@ import math
 class Weibull:
     # https://en.wikipedia.org/wiki/Weibull_distribution
     
-    def __init__(self, lambd: float, beta: float): # both parameters should be >0
+    def __init__(self, lambd: float, beta: float): 
         """
         lambd: scale parameter in (0, infinity)
-        k: shape parameter in (0, infinity)
+        beta: shape parameter in (0, infinity)
         """
         self.lambd = lambd
         self.beta = beta 
@@ -53,7 +53,7 @@ class Weibull:
 
     @functools.cached_property
     def median(self):
-        return self.lambd * scipy.special.gamma(1 + 1 / self.k)
+        return self.lambd * scipy.special.gamma(1 + 1 / self.beta)
     
     def ml_lambda(X: np.ndarray, beta: float) -> float:
         """
@@ -154,13 +154,45 @@ class Weibull:
             l=params[0]
             b=params[1]
             return Weibull(l,b)
+        
+    def epf_estimate(X: np.ndarray):
+        """
+        Estimate the parameters of the Weibull distribution using the Energy Pattern Factor Method
+        """
+        # only consider positive values for the ML-estimation (log is only defined for positive numbers)
+        X= X[X > 0]
+        X= X[~np.isnan(X)]
+
+        # exception if no data is available for computation
+        try:
+            enum=0
+            for v in X:
+                enum=enum +v**3
+            
+            enum= enum/len(X)
+
+            denom=0
+            for v in X:
+                denom=denom +v
+            
+            denom=denom/len(X)
+            denom =denom**3
+            
+            epf=enum/denom
+            b=1+ 3.69/(epf**2)
+            l=X.mean()/scipy.special.gamma(1 + 1 /b)
+        except Exception: 
+            l=-999
+            b=-999
+        finally:
+            return Weibull(l,b)
     
 
 
     def fit(self, X: np.array):
         '''
         Computes metrics of goodness of fit of the weibull class self to the data presented in the frame X
-        The metrics are (as ordered in the output: MSE of the PDF, MSE of the CDF, R^2 of the PDF, R^2 of th CDF)
+        The metrics are (as ordered in the output: MSE of the PDF, MSE of the CDF, R^2 of the PDF, R^2 of th CDF, KL-Divergence)
         '''
         # find an appropriate number of bins to sort in, as suggested in the lecture
         n_bins= int(0.1* np.sqrt(len(X)))+2
@@ -211,10 +243,15 @@ class Weibull:
             cdf_denom=cdf_denom+(F_i - mean_F_i)**2   
 
         cdf_r2=1-cdf_enum/cdf_denom
+        
+        # do the kl-divergence
+        kl=0
+        for i in range(0, len(edges)-1):
+            kl=kl+empiric_pdf[i]*np.log(empiric_pdf[i]/ (self.cdf(edges[i+1]) -self.cdf(edges[i])) +0.001)
 
-        return [mse.item(),cdf_mse.item(), r2.item(), cdf_r2.item()]
+
+        return [mse.item(),cdf_mse.item(), r2.item(), cdf_r2.item(), kl]
 
 
-    
 
 
