@@ -1,8 +1,30 @@
 # functions that return the parameters for each year and each month respectively 
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+import matplotlib as mpl
+import seaborn as sns
+import datetime as dt
+import matplotlib.dates as mdt
+from tueplots import bundles
+import tueplots as tp
+import tueplots.constants.color as tpc
+import math
+
+import scipy.optimize as opt
+import scipy.integrate
+import scipy
+
+from sklearn.gaussian_process import GaussianProcessRegressor as GP
+import sklearn.gaussian_process.kernels as GPK
+import joypy as jpy
+import os
+
+import sys
+
 from weibull import Weibull
+
 
 def yearly_params(first: int, last: int, dataframe: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -46,6 +68,84 @@ def monthly_params(first: int, last: int, dataframe: pd.DataFrame) -> pd.DataFra
         monthly_df.loc[m, 'param_beta' ]=weibull.beta
 
     return monthly_df
+
+
+def plot_timeframe(  df: pd.DataFrame, year: int, month: int =-1, day:int =-1):
+    '''
+    Only has a side-effect, no return
+    Plots the windspeed the wind speed for given (year, month, day) or  ( (year, month) or year
+    Is dependent on the exact dataframe df as we use it 
+    '''
+
+    #write a mask according to the input
+    if day!=-1 and month!=-1:
+        mask = (df['MESS_DATUM'].dt.day == day) & (df['MESS_DATUM'].dt.month == month) & (df['MESS_DATUM'].dt.year == year)
+    elif month!=-1:
+         mask = (df['MESS_DATUM'].dt.month == month) & (df['MESS_DATUM'].dt.year == year)
+    else:
+        mask = (df['MESS_DATUM'].dt.year == year)
+
+    # raise an error, if the input was not sensible
+    if len(df[mask])==0:
+        raise Exception('The input is not valid or there are no data points for the desired timeframe')
+    
+
+    else: 
+        plt.plot(df[mask]["MESS_DATUM"], df[mask]["FF_10_wind"])
+        plt.xlabel('Time')
+        plt.ylabel('Wind in m/s')
+        plt.title('Windspeed over Time in the Chosen Timeframe')
+        plt.show()
+
+
+def plot_timeframe_pdf(df: pd.DataFrame, year: int, month: int =-1, day:int =-1):
+    '''
+    function that plots for the chosen year (and optionaly month, day)
+    the empiric prodbability function as well as the fitted weibull ditribution
+    '''
+
+    #write a mask according to the input
+    if day!=-1 and month!=-1:
+        mask = (df['MESS_DATUM'].dt.day == day) & (df['MESS_DATUM'].dt.month == month) & (df['MESS_DATUM'].dt.year == year)
+    elif month!=-1:
+         mask = (df['MESS_DATUM'].dt.month == month) & (df['MESS_DATUM'].dt.year == year)
+    else:
+        mask = (df['MESS_DATUM'].dt.year == year)
+
+
+    
+    timeframe_df = df[mask]
+    Y = timeframe_df["FF_10_wind"].dropna().to_numpy()
+    
+    # raise an error, if the input was not sensible
+    if len(Y)==0:
+        raise Exception('The input is not valid or there are no data points for the desired timeframe')
+    
+    fig, ax = plt.subplots()
+    # estimate the weibull parameters and plot the corresponding probability density function
+    weibull = Weibull.estimate(Y)
+    X = np.arange(0, np.max(Y), 0.1)
+
+    ax1 = ax.twinx()
+    ax1.plot(X, weibull.pdf(X), color=tp.constants.color.rgb.tue_blue, label=r"$p(v \mid \hat{\lambda}, \hat{\beta})$")
+    ax1.set_ylim(0)
+    ax1.set_yticklabels([])
+    ax1.set_yticks([])
+    ax1.legend(loc="lower right")
+
+    # plot the histogram for the empiric pdf
+    
+    # a sensible number of bins is k=\delta \cdot \sqrt(n), 
+    #where \delta is the expected perecentage of error for the probability of each bin, and n the number of data points
+    k= int(0.1* np.sqrt(len(Y)))+1
+    timeframe_df.hist(column="FF_10_wind", bins=k, ax=ax, color=tp.constants.color.rgb.tue_red, label="Frequency")
+    ax.set_title("")
+    ax.set_xlim(0)
+    ax.set_yticklabels([])
+    ax.set_yticks([])
+    ax.legend(loc="upper right")
+    ax.set_title(f"Yearly Frequencies \& Weibull Estimation of Wind Speeds for the Chosen Timeframe")
+
 
 
 def bf_classifier(data):
