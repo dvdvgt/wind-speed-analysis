@@ -26,7 +26,8 @@ class Weibull:
         The probability density function of the Weibull distribution.
         """
         # only consider values > 0 and set rest to zero
-        result = np.zeros_like(X)
+        result = np.zeros_like(X).astype(float)
+
         non_negative_indices = X > 0
         non_negatives = X[non_negative_indices]
         result[non_negative_indices] = self.beta / self.lambd * (non_negatives / self.lambd) ** (self.beta - 1) * np.exp(- (non_negatives / self.lambd) ** self.beta)
@@ -37,7 +38,7 @@ class Weibull:
         The cummulative probability density function of the Weibull distribution.
         """
         # only consider values > 0 and set rest to zero
-        result = np.zeros_like(X)
+        result = np.zeros_like(X).astype(float)
         non_negative_indices = X > 0
         non_negatives = X[non_negative_indices]
         result[non_negative_indices] = 1 - np.exp(- (non_negatives / self.lambd) ** self.beta)
@@ -195,8 +196,10 @@ class Weibull:
         The metrics are (as ordered in the output: MSE of the PDF, MSE of the CDF, R^2 of the PDF, R^2 of th CDF, KL-Divergence)
         '''
         # find an appropriate number of bins to sort in, as suggested in the lecture
-        n_bins= int(0.1* np.sqrt(len(X)))+2
-        max_included_windspeed=int(X.max()+1)
+        X=X.dropna().to_numpy()
+        n_bins=int(0.1*np.sqrt(len(X)))+ 2 #int(0.1* np.sqrt(len(X)))+2
+        print(f'number of bins for fitting is {n_bins}')
+        max_included_windspeed=int(np.nanmax(X)+1)
         number_of_bins=n_bins
         edges=np.linspace(0,max_included_windspeed, number_of_bins)
         empiric_pdf= np.histogram(X, bins=edges)[0]
@@ -247,7 +250,7 @@ class Weibull:
         # do the kl-divergence
         kl=0
         for i in range(0, len(edges)-1):
-            kl=kl+empiric_pdf[i]*np.log(empiric_pdf[i]/ (self.cdf(edges[i+1]) -self.cdf(edges[i])) +0.001)
+            kl=kl+empiric_pdf[i]*np.log(empiric_pdf[i]/ (self.cdf(edges[i+1]) -self.cdf(edges[i])+0.0001) +0.0001)
 
 
         return [mse.item(),cdf_mse.item(), r2.item(), cdf_r2.item(), kl]
