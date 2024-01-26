@@ -198,7 +198,7 @@ class Weibull:
         # find an appropriate number of bins to sort in, as suggested in the lecture
         X=X.dropna().to_numpy()
         n_bins=int(0.1*np.sqrt(len(X)))+ 2 #int(0.1* np.sqrt(len(X)))+2
-        print(f'number of bins for fitting is {n_bins}')
+        #print(f'number of bins for fitting is {n_bins}')
         max_included_windspeed=int(np.nanmax(X)+1)
         number_of_bins=n_bins
         edges=np.linspace(0,max_included_windspeed, number_of_bins)
