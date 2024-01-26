@@ -131,11 +131,13 @@ class Loader:
 
         # create a single dataframe with all metric merged
         dfs = list(metric_dfs.values())
-        df = pd.merge(dfs[0], dfs[1], on=["MESS_DATUM", "STATIONS_ID"], how="inner", suffixes=tuple(list(map(lambda x: "_" + x, metric_dfs.keys()))[:2]))
-
-        # Loop through the remaining DataFrames and merge with the result
-        for i, df1 in enumerate(dfs[2:]):
-            df = pd.merge(df, df1, on=["MESS_DATUM", "STATIONS_ID"], how="inner", suffixes=(None, "_" + list(metric_dfs.keys())[i+2]))
-
-        return metric_dfs, df
+        if len(self.metrics) > 1:
+            df = pd.merge(dfs[0], dfs[1], on=["MESS_DATUM", "STATIONS_ID"], how="inner", suffixes=tuple(list(map(lambda x: "_" + x, metric_dfs.keys()))[:2]))
+            if len(self.metrics) > 2:
+            # Loop through the remaining DataFrames and merge with the result
+                for i, df1 in enumerate(dfs[2:]):
+                    df = pd.merge(df, df1, on=["MESS_DATUM", "STATIONS_ID"], how="inner", suffixes=(None, "_" + list(metric_dfs.keys())[i+2]))
+            return metric_dfs, df
+        else:
+            return metric_dfs, list(metric_dfs.values())[0]
             
