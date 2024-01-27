@@ -1,28 +1,12 @@
 # functions that return the parameters for each year and each month respectively 
-
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-import matplotlib as mpl
-import seaborn as sns
 import datetime as dt
-import matplotlib.dates as mdt
-from tueplots import bundles
 import tueplots as tp
-import tueplots.constants.color as tpc
-import math
-
-import scipy.optimize as opt
-import scipy.integrate
-import scipy
-
+import datetime as dt
 from sklearn.gaussian_process import GaussianProcessRegressor as GP
 import sklearn.gaussian_process.kernels as GPK
-import joypy as jpy
-import os
-
-import sys
-
 from weibull import Weibull
 
 
@@ -218,7 +202,5 @@ def pettitt_test( X: np.array) -> list:
       T.append(np.abs(x_k))
    return T
 
-
-   
-
-
+def days_to_date(start_dt: dt.datetime, days):
+    return list(map(lambda delta_day: dt.timedelta(int(delta_day)) + start_dt, days.flatten()))
