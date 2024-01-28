@@ -22,7 +22,11 @@ class Loader:
         self.metric_urls = { metric: f"{self.DATA_BASE_URL}/{metric}/historical/" for metric in metrics }
 
     def query_metric(self, metric) -> tuple: 
-        def seach_refs(soup, base_url, keyword) -> list:
+        """
+        Queries a specific metrich (such as wind) and returns dictionaries (mapping from filename to request)
+        for the meta data, the descriptions and the actual data csv files.
+        """
+        def seach_refs(soup, base_url, keyword) -> dict:
             relevant_links = [a.get("href") for a in soup.find_all("a", href=True) if a.get("href").__contains__(keyword)]
             resps = { name: rq.get(base_url + name) for name in relevant_links }
             return resps
@@ -42,10 +46,14 @@ class Loader:
 
         return meta_d, descs_d, csvs_d
     
-    def download_metric(self, metric):
+    def download_metric(self, metric) -> tuple:
+        """
+        Downloads all meta files, descriptions and csv files for an metric to
+        the `data_folder`. Returns a tuple of lists with the filesnames for meta
+        data, descriptions and csvs.
+        """
         meta, descs, csvs = self.query_metric(metric)
         save_path = os.path.join(self.data_folder, metric)
-        # os.makedirs(save_path, exist_ok=True)
         os.makedirs(os.path.join(save_path, "meta"), exist_ok=True)
 
         # save dataset description pdfs
@@ -92,6 +100,10 @@ class Loader:
 
 
     def download_all_metrics(self, reset=False): 
+        """
+    	Downloads all metrics specified in `self.metrics`. Returns a dictionary
+    	mapping from metric to a list of csv file paths for later loading.
+        """
         metric_files = {}
 
         # download data only the first time
@@ -114,6 +126,12 @@ class Loader:
 
     @functools.cached_property
     def as_dataframe(self):
+        """
+        Save all metrics to disk and returns a pandas dataframe containing all
+        joint metrics and a list of all seperate metrics. Note that this all
+        this basic pre-processing, like properly parsing the date and
+        classifying -999 values as NaN (as per the data description).
+        """
         if len(list(self.metric_files.items())) == 0:
             self.download_all_metrics()
 
