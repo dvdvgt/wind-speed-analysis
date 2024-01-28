@@ -189,6 +189,23 @@ class Weibull:
             return Weibull(l,b)
     
 
+    def rel_fit(self, X: np.array, k: int) -> float:
+        '''
+        Computes the relative fit of the Weibull distribution to X, 
+        i.e. for all the empiric data of X is sorted in k bins and the 
+        expected relative error for a bin is calculated
+        '''
+        err=0.0
+        max_wind=int(np.nanmax(X)+1)
+        
+        edges=np.linspace(0,max_wind, k+1)
+        empiric_pdf= np.histogram(X, bins=edges)[0]
+        empiric_pdf=empiric_pdf/(empiric_pdf.sum())
+        for i in range(0, len(edges)-1):
+            if empiric_pdf[i] >0:
+                err=err + empiric_pdf[i]*abs(empiric_pdf[i] - (self.cdf(edges[i+1]) -self.cdf(edges[i])))/empiric_pdf[i] 
+                
+        return err
 
     def fit(self, X: np.array):
         '''
@@ -254,6 +271,8 @@ class Weibull:
 
 
         return [mse.item(),cdf_mse.item(), r2.item(), cdf_r2.item(), kl]
+
+
 
 
 
