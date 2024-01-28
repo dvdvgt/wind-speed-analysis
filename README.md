@@ -54,7 +54,3 @@ make pdf
 ```bash
 make clean-pdf
 ```
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
