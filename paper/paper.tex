@@ -368,7 +368,7 @@ the normalised data, we obtain the posterior distribution $\mathcal{GP}(f; m', k
 truth without overfitting extreme power densities. Furthermore, the uncertainty of the model
 (standard deviation) increases gradually the further the prediction is from the data. Notably, the
 model also captures the global downward trend. When comparing the prediction to the test data in the
-years 2017 and 2018, we can observe that the prediction fits the ground truth accurately and all
+years 2017 and 2018, we can observe that the prediction fits the ground truth accurately and almost all
 data points are well within one standard deviation of the mean.
 
 \section{Discussion \& Conclusion}\label{sec:conclusion}
@@ -397,8 +397,8 @@ mitigate this issue is multiplying the wind speeds by the factor $\left(\frac{h}
 \citep{statanalysis}. However, this is far from exact, as the winds at different heights could be
 subject to different circulations.  Furthermore, we did not take the direction of the wind into
 account and made the simplification that wind turbines are always perfectly aligned.  Also, for
-equation \eqref{eq:power}, we assumed a constant air pressure rather than considering the monthly
-changing pressure.  Lastly, with the use of the maximum-likelihood method, we assumed the
+equation \eqref{eq:power}, we assumed a constant air density $\rho$ rather than considering the monthly
+changing densities.  Lastly, with the use of the maximum-likelihood method, we assumed the
 independence of measurements. While this is generally not given, we were still able to produce
 adequate estimations.
 
