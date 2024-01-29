@@ -141,7 +141,7 @@
 \begin{abstract}
 %\textcolor{magenta}{
 %Put your abstract here. Abstracts typically start with a sentence motivating why the subject is interesting. Then mention the data, methodology or methods you are working with, and describe results.}
-In the face of climate change, it is widely agreed that the energy production has to rely on more sustainable and renewable forms of harnessing energy. Offshore wind turbine parks play a crucial role in increasing the share of green energy. This paper explores probabilistic methods of assessing the wind energy potential and potential trends of data collected on Helgoland by considering wind speeds as a Weibull distributed random variable. Further, for forecasting, the monthly expected wind power density is extrapolated using a Gaussian process regression model.
+In the face of climate change, it is widely agreed that energy production has to rely on more sustainable and renewable forms of harnessing energy. Offshore wind turbine parks play a crucial role in increasing the share of green energy. This paper explores probabilistic methods of assessing the wind energy potential and potential trends of data collected on Helgoland by considering wind speeds as a Weibull distributed random variable. Further, for forecasting, the monthly expected wind power density is extrapolated using a Gaussian process regression model.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -232,7 +232,7 @@ is especially suitable.\\
 \section{Data}\label{sec:data}
 %\textcolor{magenta}{In this section, describe \emph{what you did}. Roughly speaking, explain what data you worked with, how or from where it was collected, it's structure and size.Explain your analysis, and any specific choices you made in it. Depending on the nature of your project, you may focus more or less on certain aspects. If you collected data yourself, explain the collection process in detail. If you downloaded data from the net, show an exploratory analysis that builds intuition for the data, and shows that you know the data well. If you are doing a custom analysis, explain how it works and why it is the right choice. If you are using a standard tool, it may still help to briefly outline it. Cite relevant works.}You can use the \verb|\citep| and \verb|\citet| commands for this purpose \citep{mackay2003information}.
 
-The wind speed data used in this paper was collected by \href{https://www.dwd.de}{DWD} on \href{https://www.openstreetmap.org/?mlat=54.1750&mlon=7.8920#map=15/54.1750/7.8920}{Helgoland}, spanning the years from 1996 to 2022. The wind speed is recorded at a temporal resolution of ten-minutes\footnote{Averaged over the last ten-minute interval.}, with the anemometer being $4.38 \mathrm{m}$ above ground. Averaged over the whole measurement period, the data has a yearly mean completeness of about $91\%$. Notably, the year 2019 is missing $88\%$ of its measurements. We consider this, and a noticeable drop in the yearly wind speed mean and variance of the following years, as evidence that the measurement process was changed, and therefore discard them. Notably, the years 1996 to 1998 have a completeness of about $3\%, 85\%$ and $84\%$, respectively. For preventing a distorting effect on the Weibull distribution estimations, we also did not consider these years for our analysis, thereby improving the yearly mean completeness to $99\%$. For handling outliers, we dropped measurements exhibiting a z-score $> 8$.
+The wind speed data used in this paper was collected by the \href{https://www.dwd.de}{DWD} on \href{https://www.openstreetmap.org/?mlat=54.1750&mlon=7.8920#map=15/54.1750/7.8920}{Helgoland}, spanning the years from 1996 to 2022. The wind speed is recorded at a temporal resolution of ten-minutes\footnote{Averaged over the last ten-minute interval.}, with the anemometer being $4.38 \mathrm{m}$ above ground. Averaged over the whole measurement period, the data has a yearly mean completeness of about $91\%$. Notably, the year 2019 is missing $88\%$ of its measurements. We consider this, and a noticeable drop in the yearly wind speed mean and variance of the following years, as evidence that the measurement process was changed, and therefore discard them. Notably, the years 1996 to 1998 have a completeness of about $3\%, 85\%$ and $84\%$, respectively. For preventing a distorting effect on the Weibull distribution estimations, we also did not consider these years for our analysis, thereby improving the yearly mean completeness to $99\%$. For handling outliers, we dropped measurements exhibiting a z-score $> 8$.
 
 \section{Methods}\label{sec:methods}
 
@@ -257,7 +257,7 @@ For the scale parameter $\lambda >0$ and shape parameter $\beta >0$, the probabi
     \end{cases}.
 \end{align}
 Via the gamma function, $\Gamma(z)= \int_{0}^{\infty}t^{z-1} \mathrm{e}^{-t}dt$, 
-$k$-th raw moment and variance of a random variable $V$ with Weibull distributions can be expressed as follows: 
+the $k$-th raw moment and the variance of a random variable $V$ with Weibull distribution can be expressed as follows: 
 \begin{align}  
     \mathrm{E}[V^k] &= \lambda^k \Gamma \left( 1 + \frac{k}{\beta} \right) \label{eq:n-raw-moment} \\
     \mathrm{Var}[V] &= \lambda^2 \left[  \Gamma \left( 1 + \frac{2}{\beta}\right) \label{eq:var}
@@ -297,7 +297,7 @@ For forecasting, we employ a Gaussian process regression (GPR) model to perform 
     \label{eq:gp_posterior}
     p(f \mid Y) &= \mathcal{GP}(f; m', k') \propto p(Y \mid f) \cdot p(f).
 \end{align}
-The resulting posterior (and prior) distribution collapses into a multivariate normal distribution when evaluate at some new locations $X' \in \mathbb{R}^M$.
+The resulting posterior (and prior) distribution collapses into a multivariate normal distribution when evaluated at some new locations $X' \in \mathbb{R}^M$.
 
 \section{Results}\label{sec:results}
 %\textcolor{magenta}{In this section, outline your results. At this point, you are just stating the outcome of your analysis. You can highlight important aspects (``we observe a significantly higher value of $x$ over $y$''), but leave interpretation and opinion to the next section. This section absolutely \emph{has} to include at least two figures.}\\
@@ -388,9 +388,9 @@ It shows a decrease of the parameter $\lambda$ of
 $-0.059\frac{m}{s} \frac{1}{\mathrm{yr}}$ with an RMSE of $0.42\frac{m}{s}$. 
 For $\beta$, the slope is $-0.002 \frac{1}{\mathrm{yr}}$, with an RMSE of $0.07  \frac{m}{s}$.
 At the $5\%$ level of the two-sided permutation test, the null hypothesis that there is no linear trend in 
-the development of the parameter $\lambda$ can be rejected (p-value$=0.002$), so the observation is statistically significant. 
-For the parameter $\beta$, however, the p-value is $0.371$, so we cannot reject the null hypothesis.
-Assuming the trend observed in $\lambda$ and the empiric mean $\bar \beta=2.28$ for $\beta$, we derive the following trends in other quantities:
+the development of the parameter $\lambda$ can be rejected (p-value$=0.001$), so the observation is statistically significant. 
+For the parameter $\beta$, however, the p-value is $0.383$, so we cannot reject the null hypothesis.
+Assuming the trend observed in $\lambda$ and the empiric mean $\bar \beta=2.29$ for $\beta$, we derive the following trends in other quantities:
 As the mean  and standard deviation are proportional to $ \lambda$, we can infer a linear trend of $-0.052 \frac{m}{s}  \frac{1}{\mathrm{yr}}$
 and  $-0.024 \frac{m}{s} \frac{1}{\mathrm{yr}}$, respectively. 
 %Further, the probabilities of wind speed below $ 3 \frac{m}{s}$ and above $22 \frac{m}{s}$ are especially relevant (Section \ref{sec:power-density}):
@@ -422,7 +422,7 @@ By using \eqref{eq:power-expectation}, we numerically computed the expected powe
 %For assessing the viability of wind turbine (parks), one might also be interested in the weekly or daily values  and, even more importantly, in a forecast. Hence, for interpolating the daily expected power density, we employ a Gaussian Process Regression model to perform a time-series regression. In addition to interpolating, we also use the same model for extrapolation and thereby making predictions about the future daily expected power density.
 The first step for conducting a GP regression is to decide on a kernel $k$ for the prior \eqref{eq:gp_prior}. By analysing the plotted raw monthly expected power density, we identify a yearly periodic trend and a slight global downward trend. The former can be captured by the Exponential-Sine-Squared kernel (ES) \cite{MacKay1998IntroductionTG}. Supported by the empirical data, we choose a periodicity of $365 \, \text{days}$ and an amplitude of $450 \, \frac{\textrm{W}}{\text{m}^2}$. For the length scale, we settle for a rather small value ($< 2 \, $ days) in order to capture local patterns in the periodicity more accurately. For allowing the amplitude to slowly decay over long periods of time, we multiply the ES kernel by a very smooth (length scale $> 50 \, \text{years}$) Squared-Exponential (SE) kernel. For reproducing the global downwards trend observed in section \ref{sec:trend}, we also choose a very smooth Squared-Exponential kernel with an output scale of $100 \, \frac{\textrm{W}}{\text{m}^2}$. For accounting for the monthly midterm trend, we add a Rational-Quadratic kernel \cite{rasmussen-williams-gp} with a scale of $10 \, \frac{\textrm{W}}{\text{m}^2}$ and a length scale of one month. Finally, the additive kernel, consisting of a White-Noise (WN) and a Matern kernel (MA) \cite{abramowitz1968handbook}, is responsible for explaining measurement noise in the data and thus also prevents overfitting. Thereby, the kernel has the form
 $$k = \underbrace{\text{ES} \cdot \text{SE}}_{\text{yearly trend}} + \underbrace{\text{RQ}}_\text{monthly trend} + \underbrace{\text{ES}}_\text{longterm trend} + \underbrace{\text{WN} + \text{MA}}_{\text{noise}}.$$
-By drawing samples\footnote{with the mean of the data added.} $f_i \sim \mathcal{GP}(f; 0, k)$ from the prior distribution \eqref{eq:gp_prior}, we gauge how accurately our kernel choice fits to the given data. The results are shown in Figure \ref{fig:gp-samples}. We can observe that the amplitude and periodicity of some of the samples mirrors the data's in an accurate manner, supporting our choice of hyperparameters. After conditioning the Gaussian Process prior on the normalised data, we obtain the posterior distribution $\mathcal{GP}(f; m', k')$ \eqref{eq:gp_posterior}. The evaluated posterior mean and standard deviation can be found in Figure \ref{fig:gp-pred}. We can observe that the mean function is following the periodicity of the ground truth without overfitting extreme power densities. Furthermore, the uncertainty of the model (standard deviation) increases gradually the further the prediction is from the data. Notably, the model also captures the global downward trend. When comparing the prediction to the test data in the years 2017 and 2018, we can observe that the prediction fits the ground truth accurately and all data points are well within one standard deviation of the mean.
+By drawing samples\footnote{with the mean of the data added.} $f_i \sim \mathcal{GP}(f; 0, k)$ from the prior distribution \eqref{eq:gp_prior}, we gauge how accurately our kernel choice fits to the given data. The results are shown in Figure \ref{fig:gp-samples}. We can observe that the amplitude and periodicity of some of the samples mirrors the data's in an accurate manner, supporting our choice of hyperparameters. After conditioning the Gaussian process prior on the normalised data, we obtain the posterior distribution $\mathcal{GP}(f; m', k')$ \eqref{eq:gp_posterior}. The evaluated posterior mean and standard deviation can be found in Figure \ref{fig:gp-pred}. We can observe that the mean function is following the periodicity of the ground truth without overfitting extreme power densities. Furthermore, the uncertainty of the model (standard deviation) increases gradually the further the prediction is from the data. Notably, the model also captures the global downward trend. When comparing the prediction to the test data in the years 2017 and 2018, we can observe that the prediction fits the ground truth accurately and all data points are well within one standard deviation of the mean.
 
 \section{Discussion \& Conclusion}\label{sec:conclusion}
 %\textcolor{magenta}{Use this section to briefly summarize the entire text. Highlight limitations and problems, but also make clear statements where they are possible and supported by the analysis.}
@@ -444,11 +444,11 @@ is multiplying the wind speeds by the factor
 $\left(\frac{h}{4.38 \mathrm{m}} \right)^{0.14}$ or the power density by its cube, 
 where $h$ is the  proposed hub height of a turbine \citep{statanalysis}. However, this is far from exact, as the winds at different heights could be subject to different circulations. 
 Furthermore, we did not take the direction of the wind into account and made the simplification that wind turbines are always perfectly aligned. 
-Also, for the \eqref{eq:power}, we assumed a constant air pressure rather than considering the monthly changing pressure.
+Also, for equation \eqref{eq:power}, we assumed a constant air pressure rather than considering the monthly changing pressure.
 Lastly, with the use of the maximum-likelihood method, we assumed the independence of measurements. While this is generally not given, we were still able to produce adequate estimations.
 
 \section*{Contribution Statement}
-David Voigt devised the wind power density and conducted the Gaussian process regression. 
+David Voigt conducted the Gaussian process regression. 
 Gwendolyn Neitzel was mainly concerned with the Weibull model fitting and the trend analysis.
 Mohammad Fadel Berakdar focused on the data preprocessing. Alireza Yahyanejad worked on data loading.
 All authors were involved in data exploration and jointly wrote the report. 
