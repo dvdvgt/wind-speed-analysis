@@ -1,4 +1,10 @@
-# functions that return the parameters for each year and each month respectively 
+'''
+This utility file contains some functions that are usefule
+for visualizing the data, computing all monthly or yearly parameters or doing an inhomogeneity test.
+
+'''
+
+
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
