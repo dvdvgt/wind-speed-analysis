@@ -1,6 +1,5 @@
-name: datalit
+name: dataliteracy
 channels:
   - defaults
 dependencies:
   - python=3.10
-prefix: /opt/homebrew/Caskroom/miniconda/base/envs/datalit
