@@ -49,3 +49,10 @@ make pdf
 ```bash
 make clean-pdf
 ```
+
+## Data source
+
+The data used in this repository and paper was taken from [DWD](https://www.dwd.de) and can be found here:
+
+> <https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/10_minutes/>
+
